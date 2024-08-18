@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Application</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+
+    <!-- start panel -->
+  <div class="bg-white startpanel p-8 rounded-lg shadow-lg w-full max-w-md ">
+    <h1 class="text-2xl font-bold mb-6 text-center">Chat Application</h1>
+    <form id="startform" class="space-y-4">
+      <div>
+        <label for="name" class="block text-gray-700 font-medium mb-2">Enter your name:</label>
+        <input type="text" id="username" name="name" required class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      <button id="startbtn" type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Start Chat</button>
+    </form>
+  </div>
+  <!-- chat panel -->
+  <div class="bg-white hidden chatpanel rounded-lg shadow-lg w-full max-w-md h-[70vh] flex flex-col">
+    <header class="bg-blue-600 text-white text-center text-2xl py-4 rounded-t-lg">
+        Chat Room
+    </header>
+    <main class="flex flex-col flex-1 p-4 space-y-4 overflow-y-auto">
+        <div id="messageBox" class="space-y-2">
+        
+             <!-- receiver -->
+            
+
+             
+            <!-- sender -->
+            
+
+        </div>
+    </main>
+    <form id="messageForm" class="flex p-4 border-t border-gray-200 bg-gray-50">
+        <input type="text" id="messageInput" class="flex-1 border border-gray-300 rounded-lg px-4 py-2 mr-2"
+            placeholder="Type a message..." autocomplete="off">
+        <button type="submit"
+            class="bg-blue-600 send text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Send</button>
+    </form>
+</div>
+<script>
+    var startform = document.querySelector("#startform")
+    var startpanel = document.querySelector('.startpanel')
+    var chatpanel = document.querySelector('.chatpanel')
+    var inp = document.querySelector("#username");
+    var startbtn = document.querySelector("#startbtn")
+    var messageform = document.querySelector("#messageForm")
+    var message = document.querySelector("#messageInput")
+    var send = document.querySelector('.send')
+
+
+    startform.addEventListener("submit",function(event){
+        event.preventDefault();
+    })
+   
+    startbtn.addEventListener("click",function(event){
+        var username = inp.value.trim();
+      if(username.length >2){
+        const socket = io();
+       socket.emit("username",username);
+       
+       socket.on("saved",function(event){
+        startpanel.classList.add('hidden')
+        chatpanel.classList.remove('hidden')
+       })
+       
+       messageform.addEventListener("submit",function(val){
+        val.preventDefault();
+
+        if(message.value.trim().length >0){
+            socket.emit("message",message.value)
+            message.value = "";
+        }
+       })
+       socket.on("message", function (data) {
+                 if (data.id === socket.id) {
+                     messageBox.innerHTML +=`<div class="flex items-end justify-end mb-4">
+            <div class="bg-blue-500 text-white p-3 rounded-lg shadow-md max-w-xs">
+                <div class="font-bold text-sm">${data.username}</div>
+                <div class="mt-1">${data.value}</div>
+            </div>
+        </div>`
+                    }else{
+                        messageBox.innerHTML +=`<div class="flex items-start mb-4 justify-start">
+            <div class="bg-gray-300 text-gray-800 p-3 rounded-lg shadow-md max-w-xs">
+                <div class="font-bold text-sm">${data.username}</div>
+                <div class="mt-1">${data.value}</div>
+            </div>
+        </div>`
+                        
+                    }
+                  })
+
+
+
+
+
+
+
+      }
+    })
+
+    
+</script>
+
+</body>
+</html>
