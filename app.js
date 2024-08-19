@@ -17,6 +17,8 @@ io.on("connection",function(socket){
         userids.push(socket.id)
         console.log(usernames, userids);
         socket.emit("saved")
+        // yeh lenth wala function acitve user keliye bna rha hu
+        io.emit("active",userids.length)
     })
     socket.on("message",function(value){
         console.log(value)
@@ -25,7 +27,19 @@ io.on("connection",function(socket){
         io.emit("message",{value,id:socket.id,username})
     })
     console.log("connected")
+
+    socket.on("disconnect",function(val){
+        var index = userids.indexOf(socket.id)
+        console.log("disconnected")
+        // console.log(socket.id)
+        userids.splice(index, 1);
+        usernames.splice(index, 1);
+        io.emit("active",userids.length)
+        console.log(usernames)
+
+    })
 })
+
 app.get("/",(req,res)=>{
     res.render("index")
 })

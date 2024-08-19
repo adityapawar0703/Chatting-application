@@ -12,7 +12,7 @@
 
     <!-- start panel -->
   <div class="bg-white startpanel p-8 rounded-lg shadow-lg w-full max-w-md ">
-    <h1 class="text-2xl font-bold mb-6 text-center">Chat Application</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">Chat Application</h1> 
     <form id="startform" class="space-y-4">
       <div>
         <label for="name" class="block text-gray-700 font-medium mb-2">Enter your name:</label>
@@ -23,8 +23,8 @@
   </div>
   <!-- chat panel -->
   <div class="bg-white hidden chatpanel rounded-lg shadow-lg w-full max-w-md h-[70vh] flex flex-col">
-    <header class="bg-blue-600 text-white text-center text-2xl py-4 rounded-t-lg">
-        Chat Room
+    <header class="bg-blue-600 text-white text-center text-2xl py-4 rounded-t-lg flex justify-between p-5">
+        Chat Room     <h2 id="active"></h2>
     </header>
     <main class="flex flex-col flex-1 p-4 space-y-4 overflow-y-auto">
         <div id="messageBox" class="space-y-2">
@@ -98,9 +98,12 @@
                     }
                   })
 
+        var active = document.querySelector("#active")
+        socket.on("active",function(val){
+           active.innerHTML = `${val} Active`
+        })
 
-
-
+     
 
 
 
