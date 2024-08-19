@@ -33,4 +33,4 @@ app.get("/",(req,res)=>{
 // app.get('/temp',(req,res)=>{
 //     res.render("temp");
 // })
-server.listen(3000);
+server.listen(process.env.PORT ||3000);
