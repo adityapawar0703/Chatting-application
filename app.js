@@ -30,7 +30,7 @@ app.get("/",(req,res)=>{
     res.render("index")
 })
 
-app.get('/temp',(req,res)=>{
-    res.render("temp");
-})
+// app.get('/temp',(req,res)=>{
+//     res.render("temp");
+// })
 server.listen(3000);
